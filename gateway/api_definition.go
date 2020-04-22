@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/jensneuse/graphql-go-tools/pkg/graphql"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -17,7 +18,7 @@ import (
 	"text/template"
 	"time"
 
-	sprig "gopkg.in/Masterminds/sprig.v2"
+	"gopkg.in/Masterminds/sprig.v2"
 
 	"github.com/gorilla/mux"
 
@@ -26,7 +27,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	circuit "github.com/TykTechnologies/circuitbreaker"
+	"github.com/TykTechnologies/circuitbreaker"
 	"github.com/TykTechnologies/gojsonschema"
 	"github.com/TykTechnologies/tyk/apidef"
 	"github.com/TykTechnologies/tyk/config"
@@ -187,6 +188,8 @@ type APISpec struct {
 	middlewareChain *ChainObject
 
 	network NetworkStats
+
+	graphqlSchema *graphql.Schema
 }
 
 // Release re;leases all resources associated with API spec

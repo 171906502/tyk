@@ -14,9 +14,9 @@ import (
 
 	"github.com/gocraft/health"
 	"github.com/justinas/alice"
-	newrelic "github.com/newrelic/go-agent"
+	"github.com/newrelic/go-agent"
 	"github.com/paulbellamy/ratecounter"
-	cache "github.com/pmylund/go-cache"
+	"github.com/pmylund/go-cache"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/singleflight"
 
@@ -400,6 +400,20 @@ func (t BaseMiddleware) ApplyPolicies(session *user.SessionState) error {
 
 							if !found {
 								r.AllowedURLs = append(r.AllowedURLs, v.AllowedURLs...)
+							}
+						}
+
+						for _, t := range v.RestrictedTypes {
+							found := false
+							for ri, rt := range r.RestrictedTypes {
+								if t.Name == rt.Name {
+									found = true
+									r.RestrictedTypes[ri].Fields = append(rt.Fields, t.Fields...)
+								}
+							}
+
+							if !found {
+								r.RestrictedTypes = append(r.RestrictedTypes, v.RestrictedTypes...)
 							}
 						}
 
